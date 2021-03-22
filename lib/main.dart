@@ -5,8 +5,6 @@ import 'package:submission2_flutter_expert/presentation/bloc/home/home_page_bloc
 import 'package:submission2_flutter_expert/presentation/ui/detail_restaurant_screen.dart';
 import 'package:submission2_flutter_expert/presentation/ui/home.dart';
 import 'package:submission2_flutter_expert/shared/bloc/restaurant_bloc_observer.dart';
-import 'package:submission2_flutter_expert/shared/conts.dart';
-import 'package:submission2_flutter_expert/shared/router.dart';
 import 'package:flutter/material.dart' hide Router;
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
