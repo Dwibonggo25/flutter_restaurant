@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-
 
 class RestaurantResponse {
   RestaurantResponse({

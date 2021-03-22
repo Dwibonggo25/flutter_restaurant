@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:submission2_flutter_expert/presentation/bloc/home/home_page_bloc.dart';
+
 
 class BottomSheetsSearch extends StatefulWidget {
   @override
@@ -6,7 +9,7 @@ class BottomSheetsSearch extends StatefulWidget {
 }
 
 class _BottomSheetsSearchState extends State<BottomSheetsSearch> {
-
+  final _scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   final _searchFieldKey = GlobalKey<FormFieldState>();
   final _searchFieldController = TextEditingController();
   var _typeSearch = ["Menu", "Nama Restaurant"];
@@ -14,9 +17,10 @@ class _BottomSheetsSearchState extends State<BottomSheetsSearch> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+    return Scaffold(
+      key: _scaffoldGlobalKey,
+      body: Padding(
+        padding: EdgeInsets.only(bottom: 8),
         child: Container(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           width: MediaQuery.of(context).size.width,
@@ -113,8 +117,19 @@ class _BottomSheetsSearchState extends State<BottomSheetsSearch> {
   }
 
   _validateInput() {
+    if(_type == null) {
+      _showSnakbar("Jangan kosong");
+      return;
+    }
+    context.read<HomePageBloc>().add(SearchPageIn(query: _searchFieldController.text));
     Navigator.pop(context);
+  }
 
+  void _showSnakbar(String message){
+    _scaffoldGlobalKey.currentState.showSnackBar(SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.red,
+    ));
   }
 }
 

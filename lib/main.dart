@@ -1,6 +1,8 @@
 
 import 'package:submission2_flutter_expert/data/repositories/restaurant_repositories.dart';
-import 'package:submission2_flutter_expert/presentation/bloc/home_page_bloc.dart';
+import 'package:submission2_flutter_expert/presentation/bloc/detail/detil_page_bloc.dart';
+import 'package:submission2_flutter_expert/presentation/bloc/home/home_page_bloc.dart';
+import 'package:submission2_flutter_expert/presentation/ui/detail_restaurant_screen.dart';
 import 'package:submission2_flutter_expert/presentation/ui/home.dart';
 import 'package:submission2_flutter_expert/shared/bloc/restaurant_bloc_observer.dart';
 import 'package:submission2_flutter_expert/shared/conts.dart';
@@ -18,11 +20,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HomePageBloc(repositories: RestaurantRepositories()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+            create: (context) => HomePageBloc(repositories: RestaurantRepositories())),
+        BlocProvider(create: (context) => DetilPageBloc(repositories: RestaurantRepositories())),
+      ],
       child: MaterialApp(
-        title: 'Fetch Data Example',
-        home: HomePageScreen(),
+        initialRoute: HomePageScreen.routeName,
+        routes: {
+          HomePageScreen.routeName: (context) => HomePageScreen(),
+          DetailResturantScreen.routeName: (context) => DetailResturantScreen( args: ModalRoute.of(context).settings.arguments,),
+        }
       ),
     );
   }

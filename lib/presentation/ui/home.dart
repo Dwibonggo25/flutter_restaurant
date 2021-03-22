@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:submission2_flutter_expert/data/models/restaurant_response.dart';
-import 'package:submission2_flutter_expert/presentation/bloc/home_page_bloc.dart';
+import 'package:submission2_flutter_expert/data/models/restorants_arguments.dart';
+import 'package:submission2_flutter_expert/presentation/bloc/home/home_page_bloc.dart';
 import 'package:submission2_flutter_expert/presentation/ui/bottom_sheets_search.dart';
+import 'package:submission2_flutter_expert/presentation/ui/detail_restaurant_screen.dart';
 import 'package:submission2_flutter_expert/presentation/widget/start_rating.dart';
+import 'package:submission2_flutter_expert/presentation/widget/state_empty_data.dart';
 import 'package:submission2_flutter_expert/shared/const/constant.dart';
 
 class HomePageScreen extends StatefulWidget {
+  static const routeName = '/home_page';
   @override
   _HomePageScreenState createState() => _HomePageScreenState();
 }
@@ -47,6 +51,16 @@ class _HomePageScreenState extends State<HomePageScreen> {
               ),
             );
           }
+          if (state is HomePageNoData){
+            return StateEmptyData(
+                retry: _initData,
+                message: "Tidak punya data");
+          }
+          if (state is HomePageError){
+            return StateEmptyData(
+                retry: _initData,
+                message: "Terjadi error");
+          }
           return Container();
         },
       ),
@@ -71,14 +85,18 @@ class _HomePageScreenState extends State<HomePageScreen> {
       elevation: 4,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10)),
-      child: Container (
-        padding: EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 3,
+      child: GestureDetector(
+        onTap: () {
+          _navigateToDetil(context, data.id);
+        },
+        child: Container (
+          padding: EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 3,
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   child: Image.network(
@@ -88,51 +106,52 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     width: 100,
                   ),
                 ),
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            Expanded(
-              flex: 7,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    data.name,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 18.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Text(data.city,
-                      style: TextStyle(
-                          fontSize: 16.0, color: Colors.grey)),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Row(
-                    children: [
-                      StarRating(
-                        rating: data.rating,
-                        color: Colors.green,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(data.rating.toString(),
-                            style: TextStyle(
-                                fontSize: 16.0, color: Colors.black)),
-                      )
-                    ],
-                  ),
-
-                ],
               ),
-            )
-          ],
+              SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                flex: 7,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data.name,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Text(data.city,
+                        style: TextStyle(
+                            fontSize: 16.0, color: Colors.grey)),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Row(
+                      children: [
+                        StarRating(
+                          rating: data.rating,
+                          color: Colors.orange,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(data.rating.toString(),
+                              style: TextStyle(
+                                  fontSize: 16.0, color: Colors.black)),
+                        )
+                      ],
+                    ),
+
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       )
     );
@@ -170,7 +189,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       },
                     ),
                     Text(
-                      "Cari Provider",
+                      "Cari Berdsarkan",
                       style: TextStyle(
                         color: Colors.grey,
                       ),
@@ -192,7 +211,12 @@ class _HomePageScreenState extends State<HomePageScreen> {
         });
   }
 
+  void _navigateToDetil(BuildContext context, String id) {
+    print("Id restaurant: $id");
+    Navigator.pushNamed(context, DetailResturantScreen.routeName, arguments: RestaurantArguments(idRestaurant: id) );
+  }
 }
+
 
 
 

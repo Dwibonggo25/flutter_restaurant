@@ -8,3 +8,9 @@ abstract class HomePageEvent extends Equatable {
 }
 
 class HomePageIn extends HomePageEvent {}
+
+class SearchPageIn extends HomePageEvent {
+  final String query;
+
+  SearchPageIn({@required this.query});
+}

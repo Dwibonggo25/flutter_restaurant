@@ -17,6 +17,9 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     if(event is HomePageIn ){
       yield* _getAllRestaurant();
     }
+    if(event is SearchPageIn){
+      yield* _getSearchDataRestaurant(event.query);
+    }
   }
 
   Stream<HomePageState>  _getAllRestaurant() async* {
@@ -33,4 +36,17 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     }
   }
 
+  Stream<HomePageState> _getSearchDataRestaurant(String query) async*{
+    try{
+      yield HomePageLoading();
+      var response = await repositories.getSearchDataRestaurant(query);
+      if (response.restaurants.isEmpty){
+        yield HomePageNoData(message: "Empty data");
+      }else{
+        yield HomePageHasData(data: response.restaurants);
+      }
+    }catch(e){
+      yield HomePageError(message: "Saya tidak tahu errornya dimana");
+    }
+  }
 }
