@@ -17,10 +17,9 @@ class _BottomSheetsSearchState extends State<BottomSheetsSearch> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldGlobalKey,
-      body: Padding(
-        padding: EdgeInsets.only(bottom: 8),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Container(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           width: MediaQuery.of(context).size.width,
@@ -118,18 +117,11 @@ class _BottomSheetsSearchState extends State<BottomSheetsSearch> {
 
   _validateInput() {
     if(_type == null) {
-      _showSnakbar("Jangan kosong");
       return;
     }
     context.read<HomePageBloc>().add(SearchPageIn(query: _searchFieldController.text));
     Navigator.pop(context);
   }
 
-  void _showSnakbar(String message){
-    _scaffoldGlobalKey.currentState.showSnackBar(SnackBar(
-      content: Text(message),
-      backgroundColor: Colors.red,
-    ));
-  }
 }
 
