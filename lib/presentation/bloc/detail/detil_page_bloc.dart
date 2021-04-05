@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:submission2_flutter_expert/data/models/detil_restaurant_response.dart';
-import 'package:submission2_flutter_expert/data/repositories/restaurant_repositories.dart';
+import 'package:submission2_flutter_expert/data/repositories/remotes/restaurant_repositories.dart';
 
 part 'detil_page_event.dart';
 part 'detil_page_state.dart';

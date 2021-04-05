@@ -13,7 +13,6 @@ class HomePageHasData extends HomePageState {
 
   HomePageHasData({@required this.data});
 
-  @override
   List<Object> get props => [data];
 }
 
@@ -22,7 +21,6 @@ class HomePageNoData extends HomePageState {
 
   HomePageNoData({@required this.message});
 
-  @override
   List<Object> get props => [message];
 }
 
@@ -31,7 +29,6 @@ class HomePageError extends HomePageState {
 
   HomePageError({@required this.message});
 
-  @override
   List<Object> get props => [message];
 }
 

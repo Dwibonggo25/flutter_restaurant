@@ -9,7 +9,7 @@ class BottomSheetsSearch extends StatefulWidget {
 }
 
 class _BottomSheetsSearchState extends State<BottomSheetsSearch> {
-  final _scaffoldGlobalKey = GlobalKey<ScaffoldState>();
+
   final _searchFieldKey = GlobalKey<FormFieldState>();
   final _searchFieldController = TextEditingController();
   var _typeSearch = ["Menu", "Nama Restaurant"];

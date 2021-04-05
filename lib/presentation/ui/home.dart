@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:submission2_flutter_expert/data/models/restaurant_response.dart';
 import 'package:submission2_flutter_expert/data/models/restorants_arguments.dart';
+import 'package:submission2_flutter_expert/data/repositories/db/app_database.dart';
+import 'package:submission2_flutter_expert/presentation/bloc/home/home_local_bloc.dart';
 import 'package:submission2_flutter_expert/presentation/bloc/home/home_page_bloc.dart';
 import 'package:submission2_flutter_expert/presentation/ui/bottom_sheets_search.dart';
 import 'package:submission2_flutter_expert/presentation/ui/detail_restaurant_screen.dart';
 import 'package:submission2_flutter_expert/presentation/widget/start_rating.dart';
 import 'package:submission2_flutter_expert/presentation/widget/state_empty_data.dart';
 import 'package:submission2_flutter_expert/shared/const/constant.dart';
+import 'package:submission2_flutter_expert/shared/helper/background_service.dart';
+import 'package:submission2_flutter_expert/shared/helper/notification_helper.dart';
 
 class HomePageScreen extends StatefulWidget {
   static const routeName = '/home_page';
@@ -16,11 +21,19 @@ class HomePageScreen extends StatefulWidget {
 }
 
 class _HomePageScreenState extends State<HomePageScreen> {
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _initData();
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    selectNotificationSubject.close();
   }
 
   void _initData() {
@@ -29,41 +42,51 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
-      body: BlocBuilder<HomePageBloc, HomePageState>(
-        builder: (context, state){
-          if (state is HomePageLoading){
-            return Center(child: CircularProgressIndicator());
-          }
-          if (state is HomePageHasData) {
-            return Scaffold(
-              body: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                     _searchingField(context),
-                    _listRestaurant(context, state.data)
-                  ],
+    return MultiBlocListener(
+        listeners: [
+          BlocListener<HomeLocalBloc, HomeLocalState>(
+              listener: (event, state){
+                if (state is UpdateFavoriteSucccess){
+                  _showMessage("Ditambhkan ke favorite");
+                }
+                if(state is HomeLocalError){
+                  _showMessage("Gagal ditambahkan");
+                }
+                print("statnya kemana $state");
+              }
+          )
+        ],
+        child: BlocBuilder<HomePageBloc, HomePageState>(
+          builder: (context, state){
+            if (state is HomePageLoading){
+              return Center(child: CircularProgressIndicator());
+            }
+            if (state is HomePageHasData) {
+              return Scaffold(
+                body: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _searchingField(context),
+                      _listRestaurant(context, state.data)
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }
-          if (state is HomePageNoData){
-            return StateEmptyData(
-                retry: _initData,
-                message: "Tidak punya data");
-          }
-          if (state is HomePageError){
-            return StateEmptyData(
-                retry: _initData,
-                message: "Terjadi error");
-          }
-          return Container();
-        },
-      ),
+              );
+            }
+            if (state is HomePageNoData){
+              return StateEmptyData(
+                  retry: _initData,
+                  message: "Tidak punya data");
+            }
+            if (state is HomePageError){
+              return StateEmptyData(
+                  retry: _initData,
+                  message: "Terjadi error");
+            }
+            return Container();
+          },
+        ),
     );
   }
 
@@ -146,10 +169,25 @@ class _HomePageScreenState extends State<HomePageScreen> {
                         )
                       ],
                     ),
-
+                    SizedBox(
+                      height: 4,
+                    ),
+                    GestureDetector(
+                      onTap: (){
+                        _saveDataToLocal(data);
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.add_box, color: Colors.red),
+                          SizedBox(width: 4,),
+                          Text("Tambah Favorite")
+                        ],
+                      ),
+                    )
                   ],
                 ),
-              )
+              ),
+
             ],
           ),
         ),
@@ -189,7 +227,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       },
                     ),
                     Text(
-                      "Cari Berdsarkan",
+                      "Cari Berdasarkan",
                       style: TextStyle(
                         color: Colors.grey,
                       ),
@@ -211,9 +249,26 @@ class _HomePageScreenState extends State<HomePageScreen> {
         });
   }
 
+  _saveDataToLocal(Restaurant data){
+    var dataFavorite = RestaurantEntityData(id: data.id, name: data.name, description: data.description, pictureId: data.pictureId, city: data.city, rating: data.rating, isFavorite: true);
+    context.read<HomeLocalBloc>().add(InsertIn(data: dataFavorite));
+  }
+
   void _navigateToDetil(BuildContext context, String id) {
     print("Id restaurant: $id");
     Navigator.pushNamed(context, DetailResturantScreen.routeName, arguments: RestaurantArguments(idRestaurant: id) );
+  }
+
+  void _showMessage(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
   }
 }
 

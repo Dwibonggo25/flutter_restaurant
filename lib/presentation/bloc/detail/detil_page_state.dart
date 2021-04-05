@@ -13,7 +13,6 @@ class DetilPageHasData extends DetilPageState {
 
   DetilPageHasData({@required this.data});
 
-  @override
   List<Object> get props => [data];
 }
 
@@ -22,7 +21,6 @@ class DetilPageNoData extends DetilPageState {
 
   DetilPageNoData({@required this.message});
 
-  @override
   List<Object> get props => [message];
 }
 
@@ -31,6 +29,5 @@ class DetilPageError extends DetilPageState {
 
   DetilPageError({@required this.message});
 
-  @override
   List<Object> get props => [message];
 }
