@@ -2,6 +2,9 @@
 import 'dart:io';
 
 import 'package:android_alarm_manager/android_alarm_manager.dart';
+import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart' hide Router;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:submission2_flutter_expert/data/prefences/prefences_helper.dart';
@@ -9,7 +12,6 @@ import 'package:submission2_flutter_expert/data/repositories/db/app_database.dar
 import 'package:submission2_flutter_expert/data/repositories/local/restaurant_local_datasource.dart';
 import 'package:submission2_flutter_expert/data/repositories/remotes/restaurant_repositories.dart';
 import 'package:submission2_flutter_expert/main_screen.dart';
-import 'package:submission2_flutter_expert/presentation/bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:submission2_flutter_expert/presentation/bloc/detail/detail_page_local_bloc.dart';
 import 'package:submission2_flutter_expert/presentation/bloc/detail/detil_page_bloc.dart';
 import 'package:submission2_flutter_expert/presentation/bloc/favorite/favorite_local_bloc.dart';
@@ -21,9 +23,6 @@ import 'package:submission2_flutter_expert/presentation/ui/favorite_screen.dart'
 import 'package:submission2_flutter_expert/presentation/ui/home.dart';
 import 'package:submission2_flutter_expert/presentation/ui/setting_screen.dart';
 import 'package:submission2_flutter_expert/shared/bloc/restaurant_bloc_observer.dart';
-import 'package:flutter/material.dart' hide Router;
-import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:submission2_flutter_expert/shared/helper/background_service.dart';
 import 'package:submission2_flutter_expert/shared/helper/navigation.dart';
 import 'package:submission2_flutter_expert/shared/helper/notification_helper.dart';
@@ -54,6 +53,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _initPreferences();
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => HomePageBloc(repositories: RestaurantRepositories())),
@@ -77,4 +77,10 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
+  void _initPreferences() async {
+    sharedPreferences =  await SharedPreferences.getInstance();
+    _preferences = PreferencesHelper(sharedPreferences: sharedPreferences);
+  }
 }
+

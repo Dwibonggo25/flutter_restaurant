@@ -44,10 +44,18 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget _buildBody (BuildContext context){
     return BlocListener<NotificationBloc, NotificationState>(
         listener: (context, state){
+          print('State notif kesnii :  $state');
           if(state is SuccessSetNotification){
             _scaffoldGlobalKey.currentState.showSnackBar(SnackBar(
               duration: Duration(seconds: 2),
               content: Text("Alarm di setting"),
+              backgroundColor: Colors.green,
+            ));
+          }
+          if(state is FailedSetNotification){
+            _scaffoldGlobalKey.currentState.showSnackBar(SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text("Error"),
               backgroundColor: Colors.green,
             ));
           }

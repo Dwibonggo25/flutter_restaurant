@@ -20,7 +20,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     if (event is SetNotificationEvent) {
       try {
         bool _isScheduled = await preferences.getAlarmActive;
-        debugPrint('isScheduled $_isScheduled');
+        print('Scheduled :  $_isScheduled');
         if(_isScheduled){
           await AndroidAlarmManager.periodic(
             Duration(hours: 24),
@@ -36,6 +36,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
           yield SuccessSetNotification();
         }
       }  catch (e) {
+        print('Error notif :  ${e.toString()}');
         yield FailedSetNotification(error: e.toString());
       }
     }
