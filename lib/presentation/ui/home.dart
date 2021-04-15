@@ -64,13 +64,15 @@ class _HomePageScreenState extends State<HomePageScreen> {
             if (state is HomePageHasData) {
               return Scaffold(
                 body: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _searchingField(context),
-                      _listRestaurant(context, state.data)
-                    ],
-                  ),
+                  child: SafeArea(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _searchingField(context),
+                        _listRestaurant(context, state.data)
+                      ],
+                    ),
+                  )
                 ),
               );
             }

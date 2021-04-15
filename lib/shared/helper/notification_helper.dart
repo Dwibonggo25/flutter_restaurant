@@ -57,12 +57,13 @@ class NotificationHelper {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-    var titleNotification = "<b>Headline News</b>";
+    var titleNotification = "<b>Restaurant Terbaru</b>";
     var titleResturant = restaurants.restaurants[0].name;
 
+    print("Jalan ga notifnya");
     await flutterLocalNotificationsPlugin.show(
         0, titleNotification, titleResturant, platformChannelSpecifics,
-        payload: json.encode(restaurants));
+        payload: json.encode(restaurants.toJson()));
   }
 
   void configureSelectNotificationSubject(String route) {
