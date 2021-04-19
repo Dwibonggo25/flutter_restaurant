@@ -32,6 +32,10 @@ class RestaurantLocalDatasourceImpl extends RestaurantLocalDatasource {
 
   @override
   Future<RestaurantEntityData> getDetailResturant(String id)async {
-    return await appDatabase.restaurantDao.getDetailRestaurant(id);
+    var result = await appDatabase.restaurantDao.getDetailRestaurant(id);
+    if(result.isFavorite == null){
+      return RestaurantEntityData(id: result.id, name: result.name, description: result.description, pictureId: result.pictureId, city: result.city, rating: result.rating, isFavorite: false);
+    }
+    return result;
   }
 }
