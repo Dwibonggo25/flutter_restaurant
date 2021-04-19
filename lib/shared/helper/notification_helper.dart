@@ -70,8 +70,8 @@ class NotificationHelper {
     selectNotificationSubject.stream.listen(
           (String payload) async {
         var data = RestaurantResponse.fromJson(json.decode(payload));
-        var article = data.restaurants[0];
-        Navigation.intentWithData(route, article);
+        var restaurant = data.restaurants[0];
+        Navigation.intentWithData(route, restaurant);
       },
     );
   }
